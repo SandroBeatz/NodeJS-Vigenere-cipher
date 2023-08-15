@@ -1,8 +1,13 @@
 // Utilities
 import { defineStore } from 'pinia'
+import {ICipherStore} from "@/types/ciphers";
 
 export const useAppStore = defineStore('app', {
-  state: () => ({
-    //
+  state: (): ICipherStore => ({
+    form: {
+      encode: '',
+      decode: '',
+      password: '',
+    }
   }),
 })
