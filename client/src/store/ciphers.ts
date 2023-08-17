@@ -1,8 +1,9 @@
 // Utilities
 import { defineStore } from 'pinia'
-import {ICipherStore} from "@/types/ciphers";
+import {ICipherForm, ICipherRequest, ICipherStore} from "@/types/ciphers";
+import {generateCipher} from "@/api/ciphers.api";
 
-export const useAppStore = defineStore('app', {
+export const useCipherStore = defineStore('cipher', {
   state: (): ICipherStore => ({
     form: {
       encode: '',
@@ -10,4 +11,29 @@ export const useAppStore = defineStore('app', {
       password: '',
     }
   }),
+  actions: {
+    setCiphers(payload: ICipherForm) {
+      this.form = {
+        ...this.form,
+        ...payload
+      }
+    },
+    async fetchCiphers(payload: ICipherRequest) {
+      try {
+        const data = await generateCipher(payload)
+
+        if(payload.type === 'encode') {
+          this.setCiphers({
+            decode: data.result
+          })
+        } else if(payload.type === 'decode') {
+          this.setCiphers({
+            encode: data.result
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
 })
